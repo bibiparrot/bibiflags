@@ -1,7 +1,7 @@
 from pathlib import Path
 from pprint import pformat, pprint
 
-from bibiflags.bibiflags import BibiFlags
+from bibiflags import BibiFlags
 
 if __name__ == '__main__':
     import argparse

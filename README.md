@@ -47,7 +47,7 @@ from pprint import pformat
 
 from loguru import logger
 
-from bibiflags.bibiflags import BibiFlags
+from bibiflags import BibiFlags
 
 if __name__ == '__main__':
     flags = BibiFlags(root=str(Path(__file__).parent))
@@ -61,7 +61,7 @@ from pathlib import Path
 from pprint import pformat, pprint
 
 from loguru import logger
-from bibiflags.bibiflags import BibiFlags
+from bibiflags import BibiFlags
 
 if __name__ == '__main__':
     import argparse
@@ -78,4 +78,4 @@ if __name__ == '__main__':
 
 ## Changelog
 
-### Version 0.1.0 2024-4-10
+### Version 0.1.1 2024-4-10
