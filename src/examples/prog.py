@@ -1,5 +1,4 @@
 from pathlib import Path
-from pprint import pformat, pprint
 
 from bibiflags import BibiFlags
 
@@ -7,9 +6,9 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("echo")
+    parser.add_argument("echo", action='store_true')
     flags = BibiFlags(argparser=parser,
                       root=str(Path(__file__).parent),
                       app_name='main')
 
-    pprint(flags.parameters)
+    print(flags.parameters)

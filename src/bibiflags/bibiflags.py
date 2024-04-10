@@ -13,8 +13,9 @@ import pathlib
 from collections import OrderedDict
 from pprint import pformat
 import logging
+import yaml
+
 logger = logging.getLogger(__name__)
-from omegaconf import OmegaConf
 
 
 class BibiFlags:
@@ -103,34 +104,77 @@ class BibiFlags:
                 flags.append(flag)
         config = dict()
         config[key] = flags
-        with open(yaml_file, 'w', encoding=encoding) as fp:
-            OmegaConf.save(config=config, f=fp)
+        BibiFlags.yaml_dump(config, yaml_file, encoding=encoding)
+        # with open(yaml_file, 'w', encoding=encoding) as fp:
+        #     OmegaConf.save(config=config, f=fp)
+
 
     @staticmethod
     def contains_yaml(yaml_file: str, encoding='utf-8', key='ArgumentParser'):
-        with open(yaml_file, 'r', encoding=encoding) as fp:
-            config = OmegaConf.load(fp)
-            return key in config
+        # with open(yaml_file, 'r', encoding=encoding) as fp:
+        #     config = OmegaConf.load(fp)
+        config = BibiFlags.yaml_load(yaml_file, encoding=encoding )
+        return key in config
 
     @staticmethod
     def from_yaml(yaml_file: str, parser=None, encoding='utf-8', key='ArgumentParser') -> argparse.ArgumentParser:
-        with open(yaml_file, 'r', encoding=encoding) as fp:
-            config = OmegaConf.load(fp)
-            config = OmegaConf.to_object(config)
-            logger.info(pformat(config))
-            items = config.get(key, [])
-            if len(items) == 0:
-                logger.warning(f"Flags {key} NOT in {os.path.abspath(yaml_file)}")
-            parser = argparse.ArgumentParser() if parser is None else parser
-            for item in items:
-                if item.get('type', 'str') == 'bool':
-                    item['type'] = None
-                else:
-                    item['type'] = getattr(builtins, item.get('type', 'str'))
-                action = argparse.Action(**item)
-                if action.dest not in [_action.dest for _action in parser._actions]:
-                    parser._add_action(action)
-                else:
-                    logger.warning(f"CONFLICT ARGS '{action.dest}', NOT USED {os.path.abspath(yaml_file)}")
-            return parser
+        # with open(yaml_file, 'r', encoding=encoding) as fp:
+        #     config = OmegaConf.load(fp)
+        #     config = OmegaConf.to_object(config)
+        config = BibiFlags.yaml_load(yaml_file, encoding=encoding)
+        logger.info(pformat(config))
+        items = config.get(key, [])
+        if len(items) == 0:
+            logger.warning(f"Flags {key} NOT in {os.path.abspath(yaml_file)}")
+        parser = argparse.ArgumentParser() if parser is None else parser
+        for item in items:
+            if item.get('type', 'str') == 'bool':
+                item['type'] = None
+            else:
+                item['type'] = getattr(builtins, item.get('type', 'str'))
+            action = argparse.Action(**item)
+            if action.dest not in [_action.dest for _action in parser._actions]:
+                parser._add_action(action)
+            else:
+                logger.warning(f"CONFLICT ARGS '{action.dest}', NOT USED {os.path.abspath(yaml_file)}")
+        return parser
 
+    @staticmethod
+    def yaml_dump(data, yamlfile=None, Dumper=yaml.SafeDumper,
+                  encoding: str = 'utf-8', **kwds):
+        class OrderedDumper(Dumper):
+            pass
+
+        def _dict_representer(dumper, data):
+            return dumper.represent_mapping(
+                yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+                data.items())
+
+        OrderedDumper.add_representer(OrderedDict, _dict_representer)
+        with open(yamlfile, 'w', encoding=encoding) as stream:
+            return yaml.dump(data, stream, OrderedDumper, **kwds)
+
+    @staticmethod
+    def yaml_load(yamlfile, Loader=yaml.Loader,
+                  object_pairs_hook=OrderedDict,
+                  encoding: str = 'utf-8'):
+        class OrderedLoader(Loader):
+            pass
+
+        def construct_mapping(loader, node):
+            loader.flatten_mapping(node)
+            return object_pairs_hook(loader.construct_pairs(node))
+
+        OrderedLoader.add_constructor(
+            yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+            construct_mapping)
+        with open(yamlfile, 'r', encoding=encoding) as stream:
+            return yaml.load(stream, OrderedLoader)
+
+    @staticmethod
+    def _load_yaml_file(fp, config):
+        pass
+
+    @staticmethod
+    def _save_yaml_file(config, fp):
+        pass
