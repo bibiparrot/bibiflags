@@ -14,9 +14,9 @@ It provides 2 ways to use it:
 
 - Python version >= 3.8
 - libaries:
-  -- "PyYAML>=6.0.1"
-  -- "OmegaConf>=2.3.0"
-  -- "loguru>=0.7.2"
+  * "PyYAML>=6.0.1"
+  * "OmegaConf>=2.3.0"
+  * "loguru>=0.7.2"
 
 ```bash
 pip install bibiflags
