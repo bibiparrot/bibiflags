@@ -1,12 +1,12 @@
-![bibiflags](./docs/source/_static/bibiflags.png)
+![bibiflags](https://github.com/bibiparrot/bibiflags/blob/main/docs/source/_static/bibiflags.png)
 ===
 
 bibiflags is a python tool to import YAML configs into Arguments for Python . 
 
 It provides 2 ways to use it:
 
-- **Parse all Arguments from YAML**:  see example ![main.py](./src/examples/main.py).
-- **Merge Arguments form YAML and existing argparse.ArgumentParser**:  see example ![prog.py](./src/examples/prog.py).
+- **Parse all Arguments from YAML**:  see example ![main.py](https://github.com/bibiparrot/bibiflags/blob/main/src/examples/main.py).
+- **Merge Arguments form YAML and existing argparse.ArgumentParser**:  see example ![prog.py](https://github.com/bibiparrot/bibiflags/blob/main/src/examples/prog.py).
 
 ## Getting Started
 
