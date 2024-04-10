@@ -1,7 +1,6 @@
 from pathlib import Path
 from pprint import pformat, pprint
 
-from loguru import logger
 from bibiflags.bibiflags import BibiFlags
 
 if __name__ == '__main__':
