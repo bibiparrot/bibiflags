@@ -5,6 +5,17 @@ description = "Import YAML configs into Arguments for Python"
 authors = [
     {name = "Chunqi SHI", email = "chunqishi@gmail.com"},
 ]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/bibiparrot/bibiflags"
+Issues = "https://github.com/bibiparrot/bibiflags/issues"
+
 dependencies = [
     "PyYAML>=6.0.1",
     "OmegaConf>=2.3.0",
