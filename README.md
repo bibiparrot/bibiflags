@@ -43,36 +43,33 @@ pip install -e .
 ### Parse all Arguments from YAML
 ```
 from pathlib import Path
-from pprint import pformat
-
-from loguru import logger
 
 from bibiflags import BibiFlags
 
 if __name__ == '__main__':
     flags = BibiFlags(root=str(Path(__file__).parent))
-    logger.info(pformat(flags.parameters))
+    print(flags.parameters)
+
 
 ```
 
 ### Merge Arguments form YAML and existing argparse.ArgumentParser
 ```
 from pathlib import Path
-from pprint import pformat, pprint
 
-from loguru import logger
 from bibiflags import BibiFlags
 
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("echo")
+    parser.add_argument("echo", action='store_true')
     flags = BibiFlags(argparser=parser,
                       root=str(Path(__file__).parent),
                       app_name='main')
 
-    pprint(flags.parameters)
+    print(flags.parameters)
+
 
 ```
 
