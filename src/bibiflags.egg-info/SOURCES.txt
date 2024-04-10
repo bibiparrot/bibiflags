@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+src/bibiflags/__init__.py
+src/bibiflags/bibiflags.py
+src/bibiflags.egg-info/PKG-INFO
+src/bibiflags.egg-info/SOURCES.txt
+src/bibiflags.egg-info/dependency_links.txt
+src/bibiflags.egg-info/requires.txt
+src/bibiflags.egg-info/top_level.txt

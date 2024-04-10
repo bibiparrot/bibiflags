@@ -1,0 +1,48 @@
+flags:
+  - default: string-type-arguments
+    dest: str_arg
+    help: string type args
+    option_strings:
+      - --str_arg
+      - -sa
+    type: str
+
+  - const: true
+    default: false
+    dest: bool_arg
+    help: bool type args
+    nargs: 0
+    option_strings:
+      - --bool_arg
+      - -ba
+    type: bool
+
+  - default: 8
+    dest: int_arg
+    help: int type args
+    option_strings:
+      - --int_arg
+      - -ia
+    type: int
+
+  - default: 0.1
+    dest: float_arg
+    help: float type args
+    option_strings:
+      - --float_arg
+      - -fa
+    type: float
+
+  - default:
+      - 1
+      - 2
+      - 3
+      - 4
+    dest: list_arg
+    help: list type args
+    nargs: +
+    option_strings:
+      - --list_arg
+      - -la
+    type: int
+
