@@ -1,0 +1,19 @@
+[project]
+name = "bibiflags"
+version = "0.1.0"
+description = "Import YAML configs into Arguments for Python"
+authors = [
+    {name = "Chunqi SHI", email = "chunqishi@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[tool.pdm]
+distribution = true
