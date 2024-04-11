@@ -43,6 +43,12 @@ YAML file
 
 ```
 flags:
+
+  - dest: filename
+    help: positional args
+    type: str
+    required: true
+  
   - default: string-type-arguments
     dest: str_arg
     help: string type args
