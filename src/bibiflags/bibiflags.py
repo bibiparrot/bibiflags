@@ -108,12 +108,11 @@ class BibiFlags:
         # with open(yaml_file, 'w', encoding=encoding) as fp:
         #     OmegaConf.save(config=config, f=fp)
 
-
     @staticmethod
     def contains_yaml(yaml_file: str, encoding='utf-8', key='ArgumentParser'):
         # with open(yaml_file, 'r', encoding=encoding) as fp:
         #     config = OmegaConf.load(fp)
-        config = BibiFlags.yaml_load(yaml_file, encoding=encoding )
+        config = BibiFlags.yaml_load(yaml_file, encoding=encoding)
         return key in config
 
     @staticmethod
@@ -132,7 +131,11 @@ class BibiFlags:
                 item['type'] = None
             else:
                 item['type'] = getattr(builtins, item.get('type', 'str'))
-            action = argparse.Action(**item)
+            if item.get('option_strings', None):
+                action = argparse.Action(**item)
+            else:
+                item['option_strings'] = []
+                action = argparse._StoreAction(**item)
             if action.dest not in [_action.dest for _action in parser._actions]:
                 parser._add_action(action)
             else:
