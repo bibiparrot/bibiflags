@@ -9,6 +9,6 @@ if __name__ == '__main__':
     parser.add_argument("echo", action='store_true')
     flags = BibiFlags(argparser=parser,
                       root=str(Path(__file__).parent),
-                      app_name='main')
+                      app_name='prog')
 
     print(flags.parameters)

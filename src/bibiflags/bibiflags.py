@@ -65,16 +65,22 @@ class BibiFlags:
             self.app_flags_path = pathlib.Path(self.root).joinpath(flags_path)
         logger.info(f'app_flags_path: {self.app_flags_path}')
         if self.app_flags_path.exists():
-            _argparser = self.from_yaml(str(self.app_flags_path), _argparser, encoding=encoding, key=key)
+            _argparser, _configs = self.from_yaml(str(self.app_flags_path), _argparser, encoding=encoding, key=key)
         else:
             self.to_yaml(_argparser, self.app_flags_path, encoding=encoding, key=key)
+            _configs = BibiFlags.yaml_load(self.app_flags_path, encoding=encoding)
         self._argparser = _argparser
+        self._configs = _configs
         self._argparser.parse_args()
         logger.info(f'app_name: {self.app_name}, key: {key}, parameters: {self.parameters}')
 
     @property
     def parameters(self):
         return vars(self._argparser.parse_args())
+
+    @property
+    def configs(self):
+        return self._configs
 
     @property
     def argparser(self):
@@ -105,26 +111,14 @@ class BibiFlags:
         config = dict()
         config[key] = flags
         BibiFlags.yaml_dump(config, yaml_file, encoding=encoding)
-        # with open(yaml_file, 'w', encoding=encoding) as fp:
-        #     OmegaConf.save(config=config, f=fp)
 
     @staticmethod
     def contains_yaml(yaml_file: str, encoding='utf-8', key='ArgumentParser'):
-        # with open(yaml_file, 'r', encoding=encoding) as fp:
-        #     config = OmegaConf.load(fp)
         config = BibiFlags.yaml_load(yaml_file, encoding=encoding)
         return key in config
 
     @staticmethod
-    def from_yaml(yaml_file: str, parser=None, encoding='utf-8', key='ArgumentParser') -> argparse.ArgumentParser:
-        # with open(yaml_file, 'r', encoding=encoding) as fp:
-        #     config = OmegaConf.load(fp)
-        #     config = OmegaConf.to_object(config)
-        config = BibiFlags.yaml_load(yaml_file, encoding=encoding)
-        logger.info(pformat(config))
-        items = config.get(key, [])
-        if len(items) == 0:
-            logger.warning(f"Flags {key} NOT in {os.path.abspath(yaml_file)}")
+    def add_actions(items: dict, parser=None) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser() if parser is None else parser
         for item in items:
             if item.get('type', 'str') == 'bool':
@@ -135,12 +129,30 @@ class BibiFlags:
                 action = argparse.Action(**item)
             else:
                 item['option_strings'] = []
-                action = argparse._StoreAction(**item)
+                if item.get('nargs', 1):
+                    action = argparse._StoreAction(**item)
+                else:
+                    del item['type'], item['const'], item['nargs']
+                    action = argparse._StoreTrueAction(**item)
             if action.dest not in [_action.dest for _action in parser._actions]:
                 parser._add_action(action)
             else:
-                logger.warning(f"CONFLICT ARGS '{action.dest}', NOT USED {os.path.abspath(yaml_file)}")
+                logger.warning(f"CONFLICT ARGS '{action.dest}', YAML configs NOT USED.")
         return parser
+
+    @staticmethod
+    def from_yaml(yaml_file: str, parser=None, encoding='utf-8', key='ArgumentParser') -> (
+            argparse.ArgumentParser, dict
+    ):
+        config = BibiFlags.yaml_load(yaml_file, encoding=encoding)
+        if not config:
+            logger.warning(f"Empty or invalid YAML {os.path.abspath(yaml_file)}")
+            return parser, {}
+        logger.info(pformat(config))
+        items = config.get(key, [])
+        if len(items) == 0:
+            logger.warning(f"Flags {key} NOT in {os.path.abspath(yaml_file)}")
+        return BibiFlags.add_actions(items, parser), config
 
     @staticmethod
     def yaml_dump(data, yamlfile=None, Dumper=yaml.SafeDumper,
@@ -173,11 +185,3 @@ class BibiFlags:
             construct_mapping)
         with open(yamlfile, 'r', encoding=encoding) as stream:
             return yaml.load(stream, OrderedLoader)
-
-    @staticmethod
-    def _load_yaml_file(fp, config):
-        pass
-
-    @staticmethod
-    def _save_yaml_file(config, fp):
-        pass
