@@ -126,7 +126,11 @@ class BibiFlags:
             else:
                 item['type'] = getattr(builtins, item.get('type', 'str'))
             if item.get('option_strings', None):
-                action = argparse.Action(**item)
+                # action = argparse.Action(**item)
+                if item.get('nargs', None) == 0:
+                    action = argparse.Action(**item)
+                else:
+                    action = argparse._StoreAction(**item)
             else:
                 item['option_strings'] = []
                 if item.get('nargs', 1):

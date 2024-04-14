@@ -1,0 +1,7 @@
+flags:
+  - dest: is_wheel_first
+    help: pynsist using wheel online instead of local installed packages.
+    option_strings:
+      - --is_wheel_first
+    type: bool
+    required: false

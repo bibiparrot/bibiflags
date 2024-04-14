@@ -1,6 +1,6 @@
 [project]
 name = "bibiflags"
-version = "0.1.4"
+version = "0.1.5"
 description = "Import YAML configs into Arguments for Python"
 authors = [
     {name = "Chunqi SHI", email = "chunqishi@gmail.com"},
